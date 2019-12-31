@@ -10,7 +10,9 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-  interface MyToggle {}
+  interface MyToggle {
+    'active': boolean;
+  }
 }
 
 declare global {
@@ -27,7 +29,9 @@ declare global {
 }
 
 declare namespace LocalJSX {
-  interface MyToggle {}
+  interface MyToggle {
+    'active'?: boolean;
+  }
 
   interface IntrinsicElements {
     'my-toggle': MyToggle;

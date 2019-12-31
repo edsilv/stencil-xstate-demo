@@ -1,4 +1,4 @@
-import { Component, h, State } from '@stencil/core';
+import { Component, h, State, Prop } from '@stencil/core';
 import { interpret } from 'xstate';
 import { toggleMachine } from './ToggleMachine';
 
@@ -11,11 +11,13 @@ export class MyToggle {
 
   @State() state: any;
 
+  @Prop() active: boolean;
+
   service = interpret(toggleMachine).onTransition(current =>
     this.state = { current }
   );
 
-  componentDidLoad() {
+  componentWillLoad() {
     this.service.start();
   }
 
@@ -24,10 +26,6 @@ export class MyToggle {
   }
 
   render() {
-
-    if (!this.state) {
-      return;
-    }
 
     const { current } = this.state;
     const { send } = this.service;
