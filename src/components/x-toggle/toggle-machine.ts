@@ -51,24 +51,24 @@ export const toggleMachine = Machine<ToggleContext, ToggleStateSchema, ToggleEve
     enabled: false
   },
   states: {
-    disabled: {
-      entry: Actions.DISABLE, // on entering this state, run this action
+    [States.DISABLED]: {
+      entry: Actions.DISABLE,
       on: {
-        TOGGLE: { // todo: how to use multiple events in one line?
+        [Events.TOGGLE]: {
           target: States.ENABLED
         },
-        ENABLE: {
+        [Events.ENABLE]: {
           target: States.ENABLED
         }
      }
     },
-    enabled: {
+    [States.ENABLED]: {
       entry: Actions.ENABLE,
       on: {
-        TOGGLE: {
+        [Events.TOGGLE]: {
           target: States.DISABLED
         },
-        DISABLE: {
+        [Events.DISABLE]: {
           target: States.DISABLED
         }
       }
