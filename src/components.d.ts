@@ -10,31 +10,31 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-  interface MyToggle {
-    'active': boolean;
+  interface XToggle {
+    'enabled': boolean;
   }
 }
 
 declare global {
 
 
-  interface HTMLMyToggleElement extends Components.MyToggle, HTMLStencilElement {}
-  var HTMLMyToggleElement: {
-    prototype: HTMLMyToggleElement;
-    new (): HTMLMyToggleElement;
+  interface HTMLXToggleElement extends Components.XToggle, HTMLStencilElement {}
+  var HTMLXToggleElement: {
+    prototype: HTMLXToggleElement;
+    new (): HTMLXToggleElement;
   };
   interface HTMLElementTagNameMap {
-    'my-toggle': HTMLMyToggleElement;
+    'x-toggle': HTMLXToggleElement;
   }
 }
 
 declare namespace LocalJSX {
-  interface MyToggle {
-    'active'?: boolean;
+  interface XToggle {
+    'enabled'?: boolean;
   }
 
   interface IntrinsicElements {
-    'my-toggle': MyToggle;
+    'x-toggle': XToggle;
   }
 }
 
@@ -44,7 +44,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
-      'my-toggle': LocalJSX.MyToggle & JSXBase.HTMLAttributes<HTMLMyToggleElement>;
+      'x-toggle': LocalJSX.XToggle & JSXBase.HTMLAttributes<HTMLXToggleElement>;
     }
   }
 }
