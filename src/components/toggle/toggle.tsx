@@ -1,17 +1,17 @@
 import { Component, h, State, Prop } from "@stencil/core";
 import { interpret, Interpreter } from "xstate";
-import { toggleMachine, ToggleContext, ToggleStateSchema, ToggleEvent, Events, States } from "./toggle-machine";
+import { toggleMachine, ToggleContext, ToggleStateSchema, ToggleEvent, Events } from "./toggle-machine";
 
 @Component({
   tag: "x-toggle",
-  styleUrl: "x-toggle.css",
+  styleUrl: "toggle.css",
   shadow: true
 })
 export class XToggle {
 
-  @State() state: any;
+  @State() state: ToggleStateSchema;
 
-  @Prop() enabled: boolean = false;
+  @Prop() enabled: boolean = false; // doesn't work yet!
 
   service: Interpreter<ToggleContext, ToggleStateSchema, ToggleEvent>;
 
@@ -38,7 +38,7 @@ export class XToggle {
 
     return (
       <button onClick={() => send(Events.TOGGLE)}>
-        {current.matches(States.DISABLED) ? "Off" : "On"}
+        {current.matches("disabled") ? "Off" : "On"}
       </button>
     );
   }

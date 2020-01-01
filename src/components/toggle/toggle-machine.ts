@@ -1,4 +1,4 @@
-import { Machine, assign } from "xstate";
+import { Machine, assign, State } from "xstate";
 
 export enum Events {
   TOGGLE = "TOGGLE",
@@ -6,22 +6,12 @@ export enum Events {
   DISABLE = "DISABLE"
 }
 
-export enum States {
-  DISABLED = "disabled",
-  ENABLED = "enabled"
-}
-
-export enum Actions {
-  DISABLE = "disable",
-  ENABLE = "enable"
-}
-
-// The hierarchical (recursive) schema for the states
-export interface ToggleStateSchema {
-  states: {
-    disabled: {};
-    enabled: {};
-  };
+export type ToggleStateSchema = {
+  current: State<ToggleContext, ToggleEvent, ToggleStateSchema>,
+  states?: {
+    disabled: {},
+    enabled: {}
+  }
 }
 
 // The events that the machine handles
@@ -31,7 +21,7 @@ export type ToggleEvent =
   | { type: Events.DISABLE };
 
 // The context (extended state) of the machine
-export interface ToggleContext {
+export type ToggleContext = {
   enabled: boolean;
 }
 
@@ -46,35 +36,32 @@ const disable = assign({
 
 export const toggleMachine = Machine<ToggleContext, ToggleStateSchema, ToggleEvent>({
   id: "toggle",
-  initial: States.DISABLED,
+  initial: "disabled",
   context: {
     enabled: false
   },
   states: {
-    [States.DISABLED]: {
-      entry: Actions.DISABLE,
+    "disabled": {
+      entry: disable,
       on: {
         [Events.TOGGLE]: {
-          target: States.ENABLED
+          target: "enabled"
         },
         [Events.ENABLE]: {
-          target: States.ENABLED
+          target: "enabled"
         }
      }
     },
-    [States.ENABLED]: {
-      entry: Actions.ENABLE,
+    "enabled": {
+      entry: enable,
       on: {
         [Events.TOGGLE]: {
-          target: States.DISABLED
+          target: "disabled"
         },
         [Events.DISABLE]: {
-          target: States.DISABLED
+          target: "disabled"
         }
       }
     }
   }
-},
-{
-  actions: { enable, disable }
 });

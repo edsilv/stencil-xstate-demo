@@ -10,6 +10,7 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
+  interface XCounter {}
   interface XToggle {
     'enabled': boolean;
   }
@@ -18,22 +19,31 @@ export namespace Components {
 declare global {
 
 
+  interface HTMLXCounterElement extends Components.XCounter, HTMLStencilElement {}
+  var HTMLXCounterElement: {
+    prototype: HTMLXCounterElement;
+    new (): HTMLXCounterElement;
+  };
+
   interface HTMLXToggleElement extends Components.XToggle, HTMLStencilElement {}
   var HTMLXToggleElement: {
     prototype: HTMLXToggleElement;
     new (): HTMLXToggleElement;
   };
   interface HTMLElementTagNameMap {
+    'x-counter': HTMLXCounterElement;
     'x-toggle': HTMLXToggleElement;
   }
 }
 
 declare namespace LocalJSX {
+  interface XCounter {}
   interface XToggle {
     'enabled'?: boolean;
   }
 
   interface IntrinsicElements {
+    'x-counter': XCounter;
     'x-toggle': XToggle;
   }
 }
@@ -44,6 +54,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
+      'x-counter': LocalJSX.XCounter & JSXBase.HTMLAttributes<HTMLXCounterElement>;
       'x-toggle': LocalJSX.XToggle & JSXBase.HTMLAttributes<HTMLXToggleElement>;
     }
   }
