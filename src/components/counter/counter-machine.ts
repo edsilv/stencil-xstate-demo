@@ -1,20 +1,23 @@
 import { Machine, assign, State } from "xstate";
 
 export enum Events {
-  INCREMENT = "increment",
-  DECREMENT = "decrement"
+  START = "START",
+  INCREMENT = "INCREMENT",
+  DECREMENT = "DECREMENT"
 }
 
 // The hierarchical (recursive) schema for the states
 export interface CounterStateSchema {
   current: State<CounterContext, CounterEvent, CounterStateSchema>,
   states?: {
+    ready: {},
     active: {}
   }
 }
 
 // The events that the machine handles
 export type CounterEvent =
+  | { type: Events.START }
   | { type: Events.INCREMENT }
   | { type: Events.DECREMENT };
 
@@ -33,29 +36,39 @@ export interface CounterContext {
 // const decrement = assign({ count: context => context.count - 1 });
 
 // Guards
-const isNotMax = context => context.count < context.maximum;
-const isNotMin = context => context.count > context.minimum;
+//const isMax = ctx => ctx.count === ctx.maximum;
+const isNotMax = ctx => ctx.count < ctx.maximum;
+//const isMin = ctx => ctx.count === ctx.minimum;
+const isNotMin = ctx => ctx.count > ctx.minimum;
 
 export const counterMachine = Machine<CounterContext, CounterStateSchema, CounterEvent>({
   id: "count",
-  initial: "active",
+  initial: "ready",
   context: {
     count: 0,
-    maximum: 10,
+    maximum: 100,
     minimum: 0
   },
   states: {
-    "active": {
+    "ready": {
       on: {
-        [Events.INCREMENT]: {
-          actions: assign({count: context => context.count + 1}),
-          cond: isNotMax
-        },
-        [Events.DECREMENT]: {
-          actions: assign({count: context => context.count - 1}),
-          cond: isNotMin
-        }
+        // checks the initial context and transitions to the corresponding state
+        [Events.START]: [
+          { target: "active" }
+        ]
       }
+    },
+    "active": {
+    }
+  },
+  on: {
+    [Events.INCREMENT]: {
+      actions: assign({count: ctx => ctx.count + 1}),
+      cond: isNotMax
+    },
+    [Events.DECREMENT]: {
+      actions: assign({count: ctx => ctx.count - 1}),
+      cond: isNotMin
     }
   }
 });

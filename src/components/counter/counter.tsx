@@ -1,4 +1,4 @@
-import { Component, h, State } from "@stencil/core";
+import { Component, h, State, Prop } from "@stencil/core";
 import { interpret, Interpreter } from "xstate";
 import { counterMachine, CounterContext, CounterStateSchema, CounterEvent, Events } from "./counter-machine";
 
@@ -11,14 +11,24 @@ export class XCounter {
 
   @State() state: CounterStateSchema;
 
+  @Prop() count: number;
+  @Prop() maximum: number;
+  @Prop() minimum: number;
+
   service: Interpreter<CounterContext, CounterStateSchema, CounterEvent>;
 
   componentWillLoad() {
-    this.service = interpret(counterMachine).onTransition(current => {
+    this.service = interpret<CounterContext, CounterStateSchema, CounterEvent>(counterMachine.withContext({
+      count: this.count,
+      maximum: this.maximum,
+      minimum: this.minimum
+    })).onTransition(current => {
+      console.log(current);
       this.state = { current }
     });
 
     this.service.start();
+    this.service.send(Events.START);
   }
 
   componentDidUnload() {

@@ -11,21 +11,19 @@ export class XToggle {
 
   @State() state: ToggleStateSchema;
 
-  @Prop() enabled: boolean = false; // doesn't work yet!
+  @Prop() checked: boolean;
 
   service: Interpreter<ToggleContext, ToggleStateSchema, ToggleEvent>;
 
   componentWillLoad() {
-
-    // need to subscribe to prop changes and send events
-    // e.g. this.service.send(Events.ENABLE);
-    // what's the best way to watch props without duplicating code and that works on initial load?
-
-    this.service = interpret(toggleMachine).onTransition(current => {
+    this.service = interpret<ToggleContext, ToggleStateSchema, ToggleEvent>(toggleMachine.withContext({
+      checked: this.checked
+    })).onTransition(current => {
       this.state = { current }
     });
 
     this.service.start();
+    this.service.send(Events.START);
   }
 
   componentDidUnload() {
@@ -38,7 +36,7 @@ export class XToggle {
 
     return (
       <button onClick={() => send(Events.TOGGLE)}>
-        {current.matches("disabled") ? "Off" : "On"}
+        {current.matches("unchecked") ? "Off" : "On"}
       </button>
     );
   }
