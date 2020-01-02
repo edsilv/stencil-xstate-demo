@@ -11,8 +11,7 @@ export type ToggleStateSchema = {
   current: State<ToggleContext, ToggleEvent, ToggleStateSchema>,
   states?: {
     ready: {},
-    unchecked: {},
-    checked: {}
+    active: {}
   }
 }
 
@@ -52,34 +51,38 @@ export const toggleMachine = Machine<ToggleContext, ToggleStateSchema, ToggleEve
       on: {
         // checks the initial context and transitions to the corresponding state
         [Events.START]: [
-          { target: "unchecked", cond: isNotChecked },
-          { target: "checked", cond: isChecked }
+          { target: "active.unchecked", cond: isNotChecked },
+          { target: "active.checked", cond: isChecked }
         ]
       }
     },
-    "unchecked": {
-      entry: uncheck,
+    "active": {
       on: {
-        [Events.TOGGLE]: {
-          target: "checked"
+        [Events.CHECK]: {
+          target: ".checked"
+        },
+        [Events.UNCHECK]: {
+          target: ".unchecked"
         }
-     }
-    },
-    "checked": {
-      entry: check,
-      on: {
-        [Events.TOGGLE]: {
-          target: "unchecked"
+      },
+      states: {
+        "unchecked": {
+          entry: uncheck,
+          on: {
+            [Events.TOGGLE]: {
+              target: "checked"
+            }
+         }
+        },
+        "checked": {
+          entry: check,
+          on: {
+            [Events.TOGGLE]: {
+              target: "unchecked"
+            }
+          }
         }
       }
     }
-  },
-  on: {
-    [Events.CHECK]: {
-      target: "checked"
-    },
-    [Events.UNCHECK]: {
-      target: "unchecked"
-    }
- }
+  }
 });

@@ -12,8 +12,8 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 export namespace Components {
   interface XCounter {
     'count': number;
-    'maximum': number;
-    'minimum': number;
+    'max': number;
+    'min': number;
   }
   interface XToggle {
     'checked': boolean;
@@ -43,8 +43,8 @@ declare global {
 declare namespace LocalJSX {
   interface XCounter {
     'count'?: number;
-    'maximum'?: number;
-    'minimum'?: number;
+    'max'?: number;
+    'min'?: number;
   }
   interface XToggle {
     'checked'?: boolean;

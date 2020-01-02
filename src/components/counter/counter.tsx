@@ -12,16 +12,16 @@ export class XCounter {
   @State() state: CounterStateSchema;
 
   @Prop() count: number;
-  @Prop() maximum: number;
-  @Prop() minimum: number;
+  @Prop() max: number;
+  @Prop() min: number;
 
   service: Interpreter<CounterContext, CounterStateSchema, CounterEvent>;
 
   componentWillLoad() {
     this.service = interpret<CounterContext, CounterStateSchema, CounterEvent>(counterMachine.withContext({
       count: this.count,
-      maximum: this.maximum,
-      minimum: this.minimum
+      max: this.max,
+      min: this.min
     })).onTransition(current => {
       console.log(current);
       this.state = { current }

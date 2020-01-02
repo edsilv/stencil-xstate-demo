@@ -24,8 +24,8 @@ export type CounterEvent =
 // The context (extended state) of the machine
 export interface CounterContext {
   count: number;
-  maximum: number;
-  minimum: number;
+  min: number;
+  max: number;
 }
 
 // Actions
@@ -36,18 +36,18 @@ export interface CounterContext {
 // const decrement = assign({ count: context => context.count - 1 });
 
 // Guards
-//const isMax = ctx => ctx.count === ctx.maximum;
-const isNotMax = ctx => ctx.count < ctx.maximum;
-//const isMin = ctx => ctx.count === ctx.minimum;
-const isNotMin = ctx => ctx.count > ctx.minimum;
+const isMax = ctx => ctx.count === ctx.max;
+const isNotMax = ctx => ctx.count < ctx.max;
+const isMin = ctx => ctx.count === ctx.min;
+const isNotMin = ctx => ctx.count > ctx.min;
 
 export const counterMachine = Machine<CounterContext, CounterStateSchema, CounterEvent>({
   id: "count",
   initial: "ready",
   context: {
     count: 0,
-    maximum: 100,
-    minimum: 0
+    min: 0,
+    max: Number.MAX_VALUE
   },
   states: {
     "ready": {
@@ -59,16 +59,41 @@ export const counterMachine = Machine<CounterContext, CounterStateSchema, Counte
       }
     },
     "active": {
-    }
-  },
-  on: {
-    [Events.INCREMENT]: {
-      actions: assign({count: ctx => ctx.count + 1}),
-      cond: isNotMax
-    },
-    [Events.DECREMENT]: {
-      actions: assign({count: ctx => ctx.count - 1}),
-      cond: isNotMin
+      on: {
+        [Events.INCREMENT]: [
+          {
+            actions: assign({count: ctx => ctx.count + 1}),
+            cond: isNotMax
+          },
+          {
+            target: ".max",
+            cond: isMax
+          },
+          {
+            target: ".mid",
+            cond: () => !isMin && !isMax
+          }
+        ],
+        [Events.DECREMENT]: [
+          {
+            actions: assign({count: ctx => ctx.count - 1}),
+            cond: isNotMin
+          },
+          {
+            target: ".min",
+            cond: isMin
+          },
+          {
+            target: ".mid",
+            cond: () => !isMin && !isMax
+          }
+        ]
+      },
+      states: {
+        "min": {},
+        "mid": {},
+        "max": {}
+      }
     }
   }
 });

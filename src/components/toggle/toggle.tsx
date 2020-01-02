@@ -36,7 +36,7 @@ export class XToggle {
 
     return (
       <button onClick={() => send(Events.TOGGLE)}>
-        {current.matches("unchecked") ? "Off" : "On"}
+        {current.matches("active.unchecked") ? "Off" : "On"}
       </button>
     );
   }
