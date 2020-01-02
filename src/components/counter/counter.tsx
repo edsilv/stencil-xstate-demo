@@ -11,9 +11,9 @@ export class XCounter {
 
   @State() state: CounterStateSchema;
 
-  @Prop() count: number;
-  @Prop() max: number;
-  @Prop() min: number;
+  @Prop() count: number = 0;
+  @Prop() max: number = Number.MAX_VALUE;
+  @Prop() min: number = 0;
 
   service: Interpreter<CounterContext, CounterStateSchema, CounterEvent>;
 
@@ -23,7 +23,6 @@ export class XCounter {
       max: this.max,
       min: this.min
     })).onTransition(current => {
-      console.log(current);
       this.state = { current }
     });
 

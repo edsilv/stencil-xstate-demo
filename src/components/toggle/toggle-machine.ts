@@ -43,9 +43,6 @@ const isChecked = ctx => ctx.checked;
 export const toggleMachine = Machine<ToggleContext, ToggleStateSchema, ToggleEvent>({
   id: "toggle",
   initial: "ready",
-  context: {
-    checked: false
-  },
   states: {
     "ready": {
       on: {

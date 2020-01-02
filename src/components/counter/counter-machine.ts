@@ -36,25 +36,23 @@ export interface CounterContext {
 // const decrement = assign({ count: context => context.count - 1 });
 
 // Guards
-const isMax = ctx => ctx.count === ctx.max;
+//const isMax = ctx => ctx.count === ctx.max;
 const isNotMax = ctx => ctx.count < ctx.max;
-const isMin = ctx => ctx.count === ctx.min;
+//const isMin = ctx => ctx.count === ctx.min;
 const isNotMin = ctx => ctx.count > ctx.min;
+//const isMid = ctx => ctx.count !== ctx.min && ctx.count !== ctx.max;
 
 export const counterMachine = Machine<CounterContext, CounterStateSchema, CounterEvent>({
   id: "count",
   initial: "ready",
-  context: {
-    count: 0,
-    min: 0,
-    max: Number.MAX_VALUE
-  },
   states: {
     "ready": {
       on: {
         // checks the initial context and transitions to the corresponding state
         [Events.START]: [
-          { target: "active" }
+          {
+            target: "active"
+          }
         ]
       }
     },
@@ -64,35 +62,14 @@ export const counterMachine = Machine<CounterContext, CounterStateSchema, Counte
           {
             actions: assign({count: ctx => ctx.count + 1}),
             cond: isNotMax
-          },
-          {
-            target: ".max",
-            cond: isMax
-          },
-          {
-            target: ".mid",
-            cond: () => !isMin && !isMax
           }
         ],
         [Events.DECREMENT]: [
           {
             actions: assign({count: ctx => ctx.count - 1}),
             cond: isNotMin
-          },
-          {
-            target: ".min",
-            cond: isMin
-          },
-          {
-            target: ".mid",
-            cond: () => !isMin && !isMax
           }
         ]
-      },
-      states: {
-        "min": {},
-        "mid": {},
-        "max": {}
       }
     }
   }

@@ -8,6 +8,16 @@
   <script type="module" src="/build/stencil-xstate-demo.esm.js"></script>
   <script nomodule src="/build/stencil-xstate-demo.js"></script>
 
+  <style>
+    body {
+      padding: 3rem;
+      font-family: sans-serif;
+    }
+    h2:not(:first-child) {
+      margin-top: 3rem;
+    }
+  </style>
+
 </head>
 <body>
 
@@ -15,7 +25,7 @@
   <x-toggle checked="true"></x-toggle>
 
   <h2>Counter</h2>
-  <x-counter count="5" maximum="10" minimum="1"></x-counter>
+  <x-counter count="5" max="10" min="1"></x-counter>
 
 </body>
 </html>

@@ -11,7 +11,7 @@ export class XToggle {
 
   @State() state: ToggleStateSchema;
 
-  @Prop() checked: boolean;
+  @Prop() checked: boolean = false;
 
   service: Interpreter<ToggleContext, ToggleStateSchema, ToggleEvent>;
 
