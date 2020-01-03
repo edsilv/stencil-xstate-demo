@@ -7,7 +7,7 @@ export enum Events {
 }
 
 // The hierarchical (recursive) schema for the states
-export interface CounterStateSchema {
+export type CounterStateSchema = {
   current: State<CounterContext, CounterEvent, CounterStateSchema>,
   states?: {
     ready: {},
@@ -22,7 +22,7 @@ export type CounterEvent =
   | { type: Events.DECREMENT };
 
 // The context (extended state) of the machine
-export interface CounterContext {
+export type CounterContext = {
   count: number;
   min: number;
   max: number;
