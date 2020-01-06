@@ -13,26 +13,26 @@ export class XToggle {
 
   @Prop() checked: boolean = false;
 
-  service: Interpreter<ToggleContext, ToggleStateSchema, ToggleEvent>;
+  private _service: Interpreter<ToggleContext, ToggleStateSchema, ToggleEvent>;
 
   componentWillLoad() {
-    this.service = interpret<ToggleContext, ToggleStateSchema, ToggleEvent>(toggleMachine.withContext({
+    this._service = interpret<ToggleContext, ToggleStateSchema, ToggleEvent>(toggleMachine.withContext({
       checked: this.checked
     })).onTransition(current => {
       this.state = { current }
     });
 
-    this.service.start();
-    this.service.send(Events.START);
+    this._service.start();
+    this._service.send(Events.START);
   }
 
   componentDidUnload() {
-    this.service.stop();
+    this._service.stop();
   }
 
   render() {
     const { current } = this.state;
-    const { send } = this.service;
+    const { send } = this._service;
 
     return (
       <button onClick={() => send(Events.TOGGLE)}>
