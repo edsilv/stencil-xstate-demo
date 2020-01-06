@@ -15,6 +15,9 @@ export namespace Components {
     'max': number;
     'min': number;
   }
+  interface XMedia {
+    'src': string;
+  }
   interface XToggle {
     'checked': boolean;
   }
@@ -29,6 +32,12 @@ declare global {
     new (): HTMLXCounterElement;
   };
 
+  interface HTMLXMediaElement extends Components.XMedia, HTMLStencilElement {}
+  var HTMLXMediaElement: {
+    prototype: HTMLXMediaElement;
+    new (): HTMLXMediaElement;
+  };
+
   interface HTMLXToggleElement extends Components.XToggle, HTMLStencilElement {}
   var HTMLXToggleElement: {
     prototype: HTMLXToggleElement;
@@ -36,6 +45,7 @@ declare global {
   };
   interface HTMLElementTagNameMap {
     'x-counter': HTMLXCounterElement;
+    'x-media': HTMLXMediaElement;
     'x-toggle': HTMLXToggleElement;
   }
 }
@@ -46,12 +56,16 @@ declare namespace LocalJSX {
     'max'?: number;
     'min'?: number;
   }
+  interface XMedia {
+    'src'?: string;
+  }
   interface XToggle {
     'checked'?: boolean;
   }
 
   interface IntrinsicElements {
     'x-counter': XCounter;
+    'x-media': XMedia;
     'x-toggle': XToggle;
   }
 }
@@ -63,6 +77,7 @@ declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
       'x-counter': LocalJSX.XCounter & JSXBase.HTMLAttributes<HTMLXCounterElement>;
+      'x-media': LocalJSX.XMedia & JSXBase.HTMLAttributes<HTMLXMediaElement>;
       'x-toggle': LocalJSX.XToggle & JSXBase.HTMLAttributes<HTMLXToggleElement>;
     }
   }

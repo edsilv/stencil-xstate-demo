@@ -15,10 +15,10 @@ export class XCounter {
   @Prop() max: number = Number.MAX_VALUE;
   @Prop() min: number = 0;
 
-  service: Interpreter<CounterContext, CounterStateSchema, CounterEvent>;
+  private _service: Interpreter<CounterContext, CounterStateSchema, CounterEvent>;
 
   componentWillLoad() {
-    this.service = interpret<CounterContext, CounterStateSchema, CounterEvent>(counterMachine.withContext({
+    this._service = interpret<CounterContext, CounterStateSchema, CounterEvent>(counterMachine.withContext({
       count: this.count,
       max: this.max,
       min: this.min
@@ -26,23 +26,23 @@ export class XCounter {
       this.state = { current }
     });
 
-    this.service.start();
-    this.service.send(Events.START);
+    this._service.start();
+    this._service.send(Events.START);
   }
 
   componentDidUnload() {
-    this.service.stop();
+    this._service.stop();
   }
 
   render() {
     const { current } = this.state;
-    const { send } = this.service;
+    const { send } = this._service;
 
     return (
       <div>
         <p>{current.context.count}</p>
-        <button onClick={() => send(Events.DECREMENT)}>-</button>
-        <button onClick={() => send(Events.INCREMENT)}>+</button>
+        <button disabled={current.matches("active.min")} onClick={() => send(Events.DEC)}>-</button>
+        <button disabled={current.matches("active.max")} onClick={() => send(Events.INC)}>+</button>
       </div>
     );
   }
